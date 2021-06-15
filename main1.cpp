@@ -161,6 +161,7 @@ bool eulerTest(adj& dummyVector,  int odd[])
 		}
 		//tests to see if all vertices of even degree 
 		//or if exactly two vertices are of odd degree
+		//
 		}	
 			if (flag == 0 || flag == 2)
 				return (true);
@@ -221,7 +222,8 @@ void fleuryAlgorithm(adj dummyVector, const int odd[]){
 }
 }
 //Incomplete, idea was to use a depth first search 
-//Depth First search can be implemented using a stack.
+//TODO: Depth First search can be implemented using a stack.
+//
 
 bool bridgeTest(adj dummyVector, int vertex)
 {
