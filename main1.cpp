@@ -7,17 +7,20 @@
 #include <numeric>
 #include <cstdlib>
 #include <ctime>
+#include <stack>
 using namespace std;
 
 
 
 
 typedef vector < vector <int> > adj;
+
+
 int oddvertexIndex[1];
 	
 void filetoArray(adj&);
-void fleuryAlgorithm(adj, const int[]);
-bool eulerTest(adj&, int []);
+void fleuryAlgorithm(adj&, const int &);
+bool eulerTest(adj, int []);
 bool bridgeTest(adj, int);	 
  
  main()
@@ -34,51 +37,87 @@ bool bridgeTest(adj, int);
 
 		cout << "Make sure to leave spaces between the numbers in the file being processed to prevent any issues." << endl;
 		cout << "IE:" << endl;
-		cout << "X X X X" << endl;
-		cout << "X X X X" << endl;
-		cout << "X X X X" << endl;
-		cout << "X X X X" << endl;
-		cout << "Deuces " << endl;
+
 		
+
 		
-			for (int i=0; i <2; i++)
-		oddvertexIndex[i]=0;
+
+					
+				
+							
+			
+		for (int i = 0; i<adjacencyMatrix.size(); i++){
+
+			for (int j = 0; j< adjacencyMatrix.size(); j++){
+						
+				cout << "X ";
+						
+			}
+			cout << "\n";
+		}		
+
+	
+			
+	//initialize values of odd vertex index
+			for (int i=0; i <2; i++){
+				oddvertexIndex[i]=0;
+			}
 		
-		
-		cout << "The number of columns in this matrix is "<< adjacencyMatrix[0].size()<<endl;
+	//	cout << "\nThe number of columns in this matrix is "<< adjacencyMatrix[0].size()<<endl;
+
+	
+
+
+
 		testContainer=eulerTest(adjacencyMatrix, oddvertexIndex );
-		cout << "the value of the eulerTest is: "<< testContainer<<endl;
-		
-		for(int i =0; i <2; i++)
-		cout<<oddvertexIndex[i]<<" ";
-		
-		int columnAdder[adjacencyMatrix[0].size()];
+		//This portion of code confirms a properly working euler Test.
+		//cout << "\nThe value of the euler Test is: "<< testContainer<<endl;//According to the logic of the euler test a graph is eulerian if and only if there exist even degree count for all vertices or exactly two vertices are of odd degree count.
+		/*
+		//Test the values in array containing indices that are odd
+		for(int i =0; i <2; i++){
+			cout<<oddvertexIndex[i]<<" ";
+		}*/
+
+
+		int degreeCount[adjacencyMatrix[0].size()];
 		
 		for (int i=0; i < adjacencyMatrix[0].size(); i++)
-			columnAdder[i]=0;
+			degreeCount[i]=0;//Initialize global array degreeCount
 	
-	for (int i = 0; i < adjacencyMatrix.size(); i++){
+
+		for (int i = 0; i < adjacencyMatrix.size(); i++){
 					
 			for(int j = 0; j < adjacencyMatrix.size(); j++)		
-				columnAdder[j] += adjacencyMatrix[i][j];
+				degreeCount[j] += adjacencyMatrix[i][j];
 							
-	}
+		}
 						
 		
 			for (int i=0; i < adjacencyMatrix[0].size(); i++)
-				cout << columnAdder[i];	
+				cout << degreeCount[i];	
 					cout <<endl;
+				/*
 				for (int i=0; i < 2; i++)
-				cout << oddvertexIndex[i];
+					cout << oddvertexIndex[i];
+*/
+        //Logical Test for Euler test. Everything Looks correct as of July 7, 2021.
+
+		if (testContainer)
+			cout << "True"<<endl;
+		
 		if (testContainer){
 			//Apply fleury algorithm with vector as well as the array of the existence of odd vertices
 			fleuryAlgorithm(adjacencyMatrix, oddvertexIndex); 
 		}	
-		else
+		else 
 		cout << "\nThe adjacency matrix read has no EULARIAN TRAIL"<<endl;	
 		
+
+
 	return 0;   
-} 
+} //end of main
+
+
 
 //grab contents of file and place in two-dimensional vector
 
@@ -115,7 +154,7 @@ void filetoArray(adj& dummyVector){
 		}	
 			
 		 }
-					
+			/* Print contents of adjacency matrix once	
 		 for (int i = 0; i < dummyVector.size(); i++){
 					
 						for(int j = 0; j < dummyVector[i].size(); j++)		
@@ -125,27 +164,27 @@ void filetoArray(adj& dummyVector){
 								// cout<< endl;
 							}
 							cout << "\n";
-							}			
+							}		*/	
 			
 			txtFile.close();
 	}
 
-bool eulerTest(adj& dummyVector,  int odd[])
+bool eulerTest(adj dummyVector,   int odd [])
 {
 	bool test;
 	int flag=0;
 	//initializes an array equal to the number of columns in matrix
-	int columnAdder[dummyVector[0].size()];
+	int degreeCount[dummyVector[0].size()];
 
 	
 	//fixes glitch in array previously found
 	for (int i=0; i < dummyVector[0].size(); i++)
-		columnAdder[i]=0;
+		degreeCount[i]=0;
 	
 	for (int i = 0; i < dummyVector.size(); i++){
 					
 			for(int j = 0; j < dummyVector.size(); j++)		
-				columnAdder[j] += dummyVector[i][j];
+				degreeCount[j] += dummyVector[i][j];
 							
 	}
 							
@@ -153,16 +192,20 @@ bool eulerTest(adj& dummyVector,  int odd[])
 		//only if odd
 		for (int i=0; i < dummyVector[0].size(); i++){
 	
-		if (columnAdder[i] %2 !=0){
-			
+		if (degreeCount[i] %2 !=0){
+			//TODO: Logical Error Here 
 			odd[flag]=i;
 			flag++;
 			
 		}
-		//tests to see if all vertices of even degree 
+		
+		}
+
+
+			//tests to see if all vertices of even degree 
 		//or if exactly two vertices are of odd degree
 		//
-		}	
+
 			if (flag == 0 || flag == 2)
 				return (true);
 			else
@@ -172,13 +215,15 @@ bool eulerTest(adj& dummyVector,  int odd[])
 
 						
 }
-//const
-void fleuryAlgorithm(adj dummyVector, const int odd[]){
+
+void fleuryAlgorithm(adj& dummyVector,  const int( & odd)){
 	//initialize vertex
 	int currentVertex;
 	int sumDegree=0;
 	int edgeCount= sumDegree/2;
-	
+	//cout << edgeCount << endl;//TODO: Contents of edgecount = zero due to null sumDegree; Must accumulate the degree of the vertex current.
+	//int currentTrail[edgeCount];//TODO: Double check correctness.
+	vector <int> currentTrail;
 	//set up random number generator
 	srand(time(NULL));
 	
@@ -186,18 +231,22 @@ void fleuryAlgorithm(adj dummyVector, const int odd[]){
 	currentVertex = rand() % (dummyVector.size() + 1);
 	
 	//test random vertex chosen should show a different vertex every time program is ran
-	cout << "Everytime you run this program you should get a different number" << currentVertex<<endl;
+	cout << "Everytime you run this program you should get a different number" <<"\nVertex Number chosen:"<< currentVertex <<endl;
 	
 	//initialize current trail
-	vector <int> currentTrail;
-	//test random vertex chosen given correct contents
-	cout <<"contents of vertex chosen"<<endl;
 	
-	for (int i = 0; i < dummyVector.size(); i++)	
-		cout << dummyVector[i][currentVertex]<<"";
+	//test random vertex chosen given correct contents
+	cout <<"Contents of vertex chosen:\n"<<endl;
+	
+	for (int i = 0; i < dummyVector.size(); i++){
+		if (dummyVector[i][currentVertex] == 1){
+			cout << "Vertex "<<currentVertex  << " Connects to Vertex "<< i  <<endl;
+ 
+		}	
 		
+	}	
 		
-
+cout << "\n";
 //in other words all vertices are of even degree via Euler 
 	if (odd[0]==0 && odd[1]==0)
 	{
@@ -209,6 +258,8 @@ void fleuryAlgorithm(adj dummyVector, const int odd[]){
 	}
 	//if there are exactly two vertices of odd degree
 	//we start at either of those vertices
+
+	//TODO: ISOLATE AND PACKAGE ODD DEGREE TEST INTO INDEPENDENT METHOD AS OF 7/8/2021: Test for two odd degree vertices is done inside of euler test && Fleury Algorithm method.
 	else if (odd[0] && odd[1])
 	{
 		for (int i = 0; i < dummyVector.size(); i++){
@@ -225,12 +276,44 @@ void fleuryAlgorithm(adj dummyVector, const int odd[]){
 //TODO: Depth First search can be implemented using a stack.
 //
 
-bool bridgeTest(adj dummyVector, int vertex)
+bool bridgeTest(adj& dummyVector, int vertex)
 {
+
 	
 	for (int i = 0; i < dummyVector.size(); i++){
 					
 			for(int j = 0; j < dummyVector.size(); j++)		
 				dummyVector[i][vertex];
-}
+	}
+
+}//end of bridgeTest
+
+void depthFirstSearch (adj& dummyVector, int vertex ){
+	//Vector Stack Ops: vectorStack.push_back()//push element onto stack
+	//                  vectorStack.pop_pack()//pop an element off the stack
+	//                  vectorStack.back()//return value of top element
+
+
+
+
+	bool visited[dummyVector.size()];//Declare size of visited nodes
+
+	int currentVertex;
+	vector <int> vectorStack ; // declare vector to be used as stack 
+
+	vectorStack.push_back(vertex);
+
+	//Iterate until stack is empty
+	while(vectorStack.size() !=0){
+
+		currentVertex = vectorStack.pop_back();//TODO: check here
+		if (currentVertex != vistited[currentVertex])
+			vistited[currentVertex] = true;//set visited vertex in array to true
+			for(all edges from vertex to w in dummyVector.adjacent(v)){
+				vectorStack.push_back(w);
+			}
+
+	}
+
+
 }
