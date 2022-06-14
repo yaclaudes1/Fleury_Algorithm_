@@ -1,4 +1,4 @@
-# Fluery_Algorithm_
+# Fleury_Algorithm_
 #
 
 Allows for the arbitrary eularian trail to be outputted by the algorithm. The input file included takes the following graph as an adjacency matrix:  
